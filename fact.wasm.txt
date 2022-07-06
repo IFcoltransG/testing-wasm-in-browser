@@ -1,0 +1,51 @@
+; assemble using `sed 's/;.*//' fact.wasm.txt | xxd -r -p > fact.wasm`
+
+0061 736d  ; WASM binary magic number
+0100 0000  ; WASM version 01
+
+; Section 1 Types
+01         ; Section code (1)
+06         ; Section length in bytes
+01         ; 1 type
+60         ; Function:
+01         ; 1 param
+7f         ; i32 (param n)
+01         ; 1 return value
+7f         ; i32 (return type)
+
+; Section 2 Function
+03         ; Section code (3)
+02         ; Section length in bytes
+01         ; 1 function
+00         ; Using 0th defined type (i32 -> i32)
+
+; Section 3 Export
+07         ; Section code (7)
+08         ; Section length in bytes
+01         ; 1 export
+04         ; name length
+66616374   ; "fact"
+00         ; exporting a function
+00         ; Using 0th defined function (i32 -> i32)
+
+; Section 4 Code
+0a         ; Section code (10)
+17         ; Section length in bytes
+01         ; providing code for 1 function
+15         ; Length of function
+00         ; 0 locals (excludes 1 parameter)
+20 00      ; get local 0 (param n)
+45         ; i32 eqz (equals zero)
+04         ; if
+7f         ;   i32 (type of 'if' expression)
+41 01      ;   i32 constant 1
+05         ; else
+20 00      ;   get local 0 (n)
+20 00      ;   get local 0 (n)
+41 01      ;   i32 constant 1
+6b         ;   i32 sub
+10 00      ;   call 0th function (fact)
+6c         ;   i32 mul
+0b         ; end if
+0b         ; end expression (return)
+

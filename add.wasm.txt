@@ -1,0 +1,41 @@
+; assemble using `sed 's/;.*//' add.wasm.txt | xxd -r -p > add.wasm`
+
+0061 736d  ; WASM binary magic number
+0100 0000  ; WASM version 01
+
+; Section 1 Types
+01         ; Section code (1)
+07         ; Section length in bytes
+01         ; 1 type
+60         ; Function:
+02         ; 2 params
+7f         ; i32 (param a)
+7f         ; i32 (param b)
+01         ; 1 return value
+7f         ; i32 (return type)
+
+; Section 2 Function
+03         ; Section code (3)
+02         ; Section length in bytes
+01         ; 1 function
+00         ; Using 0th defined type ((i32, i32) -> i32)
+
+; Section 3 Export
+07         ; Section code (7)
+07         ; Section length in bytes
+01         ; 1 export
+03         ; name length
+616464     ; "add"
+00         ; exporting a function
+00         ; Using 0th defined function ((i32, i32) -> i32)
+
+; Section 4 Code
+0a         ; Section code (10)
+09         ; Section length in bytes
+01         ; providing code for 1 function
+07         ; Length of function
+00         ; 0 locals (excludes 2 parameters)
+20 00      ; get local 0 (param a)
+20 01      ; get local 1 (param b)
+6a         ; i32 add
+0b         ; end expression (return)

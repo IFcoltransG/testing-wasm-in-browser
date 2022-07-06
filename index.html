@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Hello wasm!</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🕵</text></svg>" />
+</head>
+
+<body>
+  <script type="module">
+    // wasm-pack wasm from wasm-bindgen rust code
+    const unit = () => { }
+    console.log(unit)
+    import wasm from "./pkg/wasm.js";
+    window.wasm = await wasm();
+  </script>
+
+  <script>
+    // manually written wasm, manually loaded
+    WebAssembly.instantiateStreaming(
+      fetch('handwritten.wasm'),
+      { imports: { log: arg => console.log(arg) } }
+    ).then(
+      results => {
+        console.log("module: ", results);
+      }
+    ).catch(console.error)
+  </script>
+</body>
+
+</html>
